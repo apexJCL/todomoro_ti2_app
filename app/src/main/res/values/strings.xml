@@ -22,4 +22,6 @@
     <string name="action_refresh">Refresh</string>
     <string name="errorFetch">There was an error fetching data from the server</string>
     <string name="noTasks">No tasks available</string>
+    <string name="serverError">Server Error has ocurred, check log for details</string>
+    <string name="labelTodo">All todo\'s</string>
 </resources>

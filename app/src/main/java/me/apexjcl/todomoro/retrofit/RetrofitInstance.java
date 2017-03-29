@@ -14,6 +14,7 @@ public class RetrofitInstance {
 
     private static String BASE_ENDPOINT_URL = "/rest/v1/";
     private static final String PREFS_NAME = "TodomoroRetrofitPrefs";
+    private static final String URL = "https://apexjcl.me/tomodoro";
 
 
     /**
@@ -31,8 +32,7 @@ public class RetrofitInstance {
 //        String baseUrl = preferences.getString("baseUrl", "");
 //        if (baseUrl.length() == 0)
 //            throw new Exception("No IP declared");
-        String baseUrl = "192.168.100.7:81";
-        String url = String.format("http://%s%s", baseUrl, BASE_ENDPOINT_URL);
+        String url = String.format("%s%s", URL, BASE_ENDPOINT_URL);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -46,9 +46,7 @@ public class RetrofitInstance {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(loggingInterceptor);
-
-        String baseUrl = "192.168.100.7:81";
-        String url = String.format("http://%s%s", baseUrl, BASE_ENDPOINT_URL);
+        String url = String.format("%s%s", URL, BASE_ENDPOINT_URL);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())

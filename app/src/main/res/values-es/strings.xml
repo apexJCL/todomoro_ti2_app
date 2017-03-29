@@ -16,4 +16,8 @@
     <string name="title_activity_home">Actividad Principal</string>
     <string name="labelDayview">Día</string>
     <string name="labelWeeView">Semana</string>
+    <string name="errorFetch">Hubo un error al recuperar valores desde el servidor</string>
+    <string name="noTasks">No hay pendientes disponibles</string>
+    <string name="serverError">Error del servidor, revise el log para más detalles</string>
+    <string name="labelTodo">Todos los pendientes</string>
 </resources>

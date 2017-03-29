@@ -5,10 +5,17 @@
     <group android:checkableBehavior="single">
         <item
                 android:id="@+id/nav_dayView"
+                android:icon="@drawable/ic_action_day"
                 android:title="@string/labelDayview"/>
         <item
                 android:id="@+id/nav_weekView"
+                android:icon="@drawable/ic_action_week"
                 android:title="@string/labelWeeView"/>
+        <item
+                android:id="@+id/nav_todo"
+                android:title="@string/labelTodo"
+                android:icon="@drawable/ic_view_list"
+                />
     </group>
 
     <item android:title="@string/currentUserlabel">

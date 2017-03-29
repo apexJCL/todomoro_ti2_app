@@ -1,18 +1,13 @@
 package me.apexjcl.todomoro.entities;
 
 import android.content.Context;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 import com.google.gson.annotations.SerializedName;
 import io.realm.Realm;
 import io.realm.RealmObject;
-import me.apexjcl.todomoro.R;
+import io.realm.annotations.PrimaryKey;
 import me.apexjcl.todomoro.retrofit.RetrofitInstance;
 import me.apexjcl.todomoro.retrofit.services.TaskService;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +21,8 @@ import java.util.List;
  */
 public class Task extends RealmObject {
 
+    @PrimaryKey
+    public int id;
     public String title;
     public String description;
     @SerializedName("due_date")
@@ -44,6 +41,7 @@ public class Task extends RealmObject {
                 realm.delete(Task.class);
                 for (Task task : tasks) {
                     Task t = realm.createObject(Task.class);
+                    t.id = task.id;
                     t.title = task.title;
                     t.description = task.description;
                     t.createdAt = task.createdAt;
@@ -64,7 +62,6 @@ public class Task extends RealmObject {
      */
     public static Call<List<Task>> refresh(Context context) {
         try {
-
             TaskService taskService = RetrofitInstance.createDebugService(TaskService.class, context);
             return taskService.fetchTasks(User.getJWT(context));
         } catch (Exception e) {
@@ -73,28 +70,27 @@ public class Task extends RealmObject {
         return null;
     }
 
-    public class FetchTaskCallback implements Callback<List<Task>> {
+    public static void reloadFromServer(final List<Task> tasks) {
+        Realm r = Realm.getDefaultInstance();
+        r.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.delete(Task.class);
+                for (Task task : tasks) {
+                    Task t = realm.createObject(Task.class);
+                    t.title = task.title;
+                    t.description = task.description;
+                    t.pomodoroCycles = task.pomodoroCycles;
+                    t.dueDate = task.dueDate;
+                    t.createdAt = task.createdAt;
+                    realm.copyToRealm(t);
+                }
+            }
+        });
+    }
 
-        private ProgressBar progressBar;
-        private Context context;
-
-        public FetchTaskCallback(ProgressBar progressBar, Context context) {
-            this.progressBar = progressBar;
-            this.context = context;
-        }
-
-        @Override
-        public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
-            if (response.body() == null)
-                Toast.makeText(context, R.string.noTasks, Toast.LENGTH_SHORT).show();
-            else
-                Task.save();
-            progressBar.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onFailure(Call<List<Task>> call, Throwable t) {
-            progressBar.setVisibility(View.GONE);
-        }
+    public static List<Task> fetchAll() {
+        Realm r = Realm.getDefaultInstance();
+        return r.where(Task.class).findAll();
     }
 }

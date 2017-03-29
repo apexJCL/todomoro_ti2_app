@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +26,11 @@ import io.realm.RealmConfiguration;
 import me.apexjcl.todomoro.entities.Task;
 import me.apexjcl.todomoro.entities.User;
 import me.apexjcl.todomoro.fragments.DayViewFragment;
+import me.apexjcl.todomoro.fragments.TodoFragment;
 import net.danlew.android.joda.JodaTimeAndroid;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.List;
 
@@ -43,8 +49,11 @@ public class HomeActivity extends AppCompatActivity
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    @BindView(R.id.progressSpinner)
+    @BindView(R.id.loadingSpinner)
     ProgressBar spinner;
+
+    @BindView(R.id.content_fragment)
+    FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +79,7 @@ public class HomeActivity extends AppCompatActivity
         if (u == null) {
             User.logout(this);
             launchLogin();
+            return;
         }
 
         TextView username = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawerUsername);
@@ -97,15 +107,6 @@ public class HomeActivity extends AppCompatActivity
         finish();
     }
 
-    private void loadMainFragment() {
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_fragment, new DayViewFragment());
-        fragmentTransaction.commit();
-        getSupportFragmentManager().executePendingTransactions();
-        List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        fab.setOnClickListener((View.OnClickListener) fragments.get(0));
-    }
-
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -128,17 +129,35 @@ public class HomeActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        toggleSpinner();
         switch (id) {
             case R.id.action_refresh:
-                toggleSpinner();
                 Call<List<Task>> refresh = Task.refresh(this);
                 if (refresh != null) {
+                    refresh.enqueue(new Callback<List<Task>>() {
+                        @Override
+                        public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
+                            if (response.body() == null) {
+                                toggleSpinner();
+                                return;
+                            }
+                            Task.reloadFromServer(response.body());
+                            DayViewFragment dayViewFragment = (DayViewFragment) getSupportFragmentManager().findFragmentByTag(DayViewFragment.TAG);
+                            dayViewFragment.updateWeekview(Task.fetchAll());
+                            toggleSpinner();
+                        }
 
+                        @Override
+                        public void onFailure(Call<List<Task>> call, Throwable t) {
+                            toggleSpinner();
+                            Toast.makeText(getApplicationContext(), R.string.serverError, Toast.LENGTH_SHORT).show();
+                            Log.d("Error", t.getMessage());
+                        }
+                    });
                 } else {
                     Toast.makeText(this, R.string.errorFetch, Toast.LENGTH_LONG).show();
+                    toggleSpinner();
                 }
-                toggleSpinner();
                 break;
             default:
                 break;
@@ -147,11 +166,14 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void toggleSpinner() {
-        if (spinner.getVisibility() == View.VISIBLE)
+    public void toggleSpinner() {
+        if (spinner.getVisibility() == View.VISIBLE) {
             spinner.setVisibility(View.GONE);
-        else
+            frameLayout.setVisibility(View.VISIBLE);
+        } else {
             spinner.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.GONE);
+        }
     }
 
 
@@ -161,12 +183,49 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        // Check current fragment
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.content_fragment);
+
         switch (id) {
+            case R.id.nav_dayView:
+            case R.id.nav_weekView:
+                if (!(f instanceof DayViewFragment))
+                    loadMainFragment();
+                DayViewFragment dayViewFragment = (DayViewFragment) getSupportFragmentManager().findFragmentByTag(DayViewFragment.TAG);
+                if (dayViewFragment != null)
+                    dayViewFragment.getWeekView().setNumberOfVisibleDays(id == R.id.nav_dayView ? 1 : 7);
+                break;
+            case R.id.nav_todo:
+                launchTodoFragment();
+                break;
+            case R.id.nav_logout:
+                User.logout(this);
+                launchLogin();
             default:
                 break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void launchTodoFragment() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.content_fragment);
+        if (f instanceof TodoFragment)
+            return;
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_fragment, new TodoFragment());
+        ft.commit();
+        getSupportFragmentManager().executePendingTransactions();
+    }
+
+    private void loadMainFragment() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.content_fragment);
+        if (f instanceof DayViewFragment)
+            return;
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_fragment, new DayViewFragment(), DayViewFragment.TAG);
+        ft.commit();
+        getSupportFragmentManager().executePendingTransactions();
     }
 }

@@ -13,6 +13,7 @@ import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import me.apexjcl.todomoro.R;
+import me.apexjcl.todomoro.entities.Task;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class DayViewFragment extends Fragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, View.OnClickListener {
+
+
+    public static String TAG = "DayViewFragment";
 
     @BindView(R.id.weekView)
     WeekView weekView;
@@ -42,6 +46,10 @@ public class DayViewFragment extends Fragment implements WeekView.EventClickList
         return v;
     }
 
+    public WeekView getWeekView() {
+        return weekView;
+    }
+
     @Override
     public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
         return new ArrayList<WeekViewEvent>();
@@ -60,5 +68,11 @@ public class DayViewFragment extends Fragment implements WeekView.EventClickList
     @Override
     public void onClick(View v) {
         Toast.makeText(getContext(), "Toasting from Dayview", Toast.LENGTH_LONG).show();
+    }
+
+    public void updateWeekview(List<Task> tasks) {
+        for (Task task : tasks){
+            // TODO create events and add to weekView
+        }
     }
 }

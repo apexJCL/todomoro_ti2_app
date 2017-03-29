@@ -5,13 +5,23 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import me.apexjcl.todomoro.entities.Task;
 import me.apexjcl.todomoro.entities.User;
+import me.apexjcl.todomoro.retrofit.RetrofitInstance;
+import me.apexjcl.todomoro.retrofit.services.TaskService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,9 +35,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Realm.init(this);
+        RealmConfiguration configuration = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(configuration);
         ButterKnife.bind(this);
 
-        if (!User.checkSession(this)){
+        if (!User.checkSession(this)) {
             launchLogin();
             return;
         }
@@ -37,7 +52,27 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Shit", Toast.LENGTH_LONG).show();
+                try {
+                    TaskService service = RetrofitInstance.createDebugService(TaskService.class, getApplicationContext());
+                    service.fetchTasks(User.getJWT(getApplicationContext())).enqueue(new Callback<List<Task>>() {
+                        @Override
+                        public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
+                            if (response.body() == null)
+                                return;
+                            for (Task task : response.body())
+                                Log.d("Response Task", task.title);
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Task>> call, Throwable t) {
+                            Log.e("Error from server", t.getMessage());
+                            t.printStackTrace();
+                            Log.d("End of error", "<<<<<<<<<<");
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -45,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Launches login activity and finish current activity
      */
-    private void launchLogin(){
+    private void launchLogin() {
         Intent i = new Intent(this, LoginActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
@@ -66,9 +101,14 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.logout:
+                Log.d("menu", "Logout clicked");
+                User.logout(this);
+                launchLogin();
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

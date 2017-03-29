@@ -36,6 +36,7 @@ public class User extends RealmObject {
 
     /**
      * Logins a user if the credentials were alright and a JWT was received.
+     *
      * @param credentials
      * @param user
      * @param context
@@ -61,6 +62,37 @@ public class User extends RealmObject {
         editor.putBoolean(Constants.PREFS_SESSION, true);
         editor.apply();
         return true;
+    }
+
+    /**
+     * Logs off current user
+     */
+    public static void logout(Context context) {
+        Realm r = Realm.getDefaultInstance();
+        r.beginTransaction();
+        r.delete(User.class);
+        r.commitTransaction();
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE).edit();
+        editor.putBoolean(Constants.PREFS_SESSION, false);
+        editor.apply();
+    }
+
+    /**
+     * Returns the current user JWT
+     *
+     * @param context
+     * @return
+     */
+    public static String getJWT(Context context) {
+        boolean session = context
+                .getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE)
+                .getBoolean(Constants.PREFS_SESSION, false);
+        if (!session)
+            return "";
+        // There's a session... maybe
+        Realm r = Realm.getDefaultInstance();
+        User first = r.where(User.class).findFirst();
+        return first == null ? "" : first.JWToken;
     }
 
 }

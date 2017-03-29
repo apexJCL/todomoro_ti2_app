@@ -15,4 +15,6 @@ public class Constants {
      */
     public static final String PREFS_SESSION = "current_session";
 
+    public static final int REALM_SCHEMA_VER = 2;
+
 }

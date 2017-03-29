@@ -1,15 +1,25 @@
 <resources>
-    <string name="app_name">Todomoro</string>
+    <string name="app_name" translatable="false">Todomoro</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="loginPlease">Inicia sesión</string>
-    <string name="labelUsername">Nombre de usuario</string>
-    <string name="labelPassword">Contraseña</string>
-    <string name="loginButton">Iniciar Sesión</string>
-    <string name="emptyUsername">Nombre de usuario no puede estar vacío</string>
-    <string name="emptyPassword">La contraseña no puede estar vacía</string>
-    <string name="passwordTooShort">La contraseña es muy corta (mínimo 6 caracteres)</string>
-    <string name="labelLogout">Cerrar Sesión</string>
+    <string name="loginPlease">Login</string>
+    <string name="labelUsername">Username</string>
+    <string name="labelPassword">Password</string>
+    <string name="loginButton">Login</string>
+    <string name="emptyUsername">Username can\'t be empty</string>
+    <string name="emptyPassword">Password can\'t be empty</string>
+    <string name="passwordTooShort">Password is too short (6 characters min)</string>
+    <string name="labelLogout">Logout</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="currentUserlabel">Account</string>
+    <string name="labelDayview">Day</string>
+    <string name="labelWeeView">Week</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="errorFetch">There was an error fetching data from the server</string>
+    <string name="noTasks">No tasks available</string>
 </resources>

@@ -2,7 +2,6 @@ package me.apexjcl.todomoro.entities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -29,8 +28,14 @@ public class User extends RealmObject {
 
     public String JWToken;
 
-    public static boolean checkSession(AppCompatActivity activity) {
-        SharedPreferences prefs = activity.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+    /**
+     * Returns whether or not a session is active (based on a preference)
+     *
+     * @param context
+     * @return
+     */
+    public static boolean checkSession(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
         return prefs.getBoolean(Constants.PREFS_SESSION, false);
     }
 
@@ -95,4 +100,19 @@ public class User extends RealmObject {
         return first == null ? "" : first.JWToken;
     }
 
+    /**
+     * Returns current user object.
+     *
+     * @param context
+     * @return
+     */
+    public static User currentUser(Context context) {
+        if (!User.checkSession(context))
+            return null;
+        return Realm.getDefaultInstance().where(User.class).findFirst();
+    }
+
+    public String getFullname() {
+        return String.format("%s %s", firstName == null ? "<Nombre>" : firstName, lastName == null ? "<Apellidos>" : lastName);
+    }
 }

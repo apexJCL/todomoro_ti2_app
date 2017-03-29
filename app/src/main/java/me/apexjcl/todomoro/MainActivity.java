@@ -13,15 +13,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import me.apexjcl.todomoro.entities.Task;
 import me.apexjcl.todomoro.entities.User;
-import me.apexjcl.todomoro.retrofit.RetrofitInstance;
-import me.apexjcl.todomoro.retrofit.services.TaskService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import java.util.List;
+import me.apexjcl.todomoro.fragments.DayViewFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,30 +45,19 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    TaskService service = RetrofitInstance.createDebugService(TaskService.class, getApplicationContext());
-                    service.fetchTasks(User.getJWT(getApplicationContext())).enqueue(new Callback<List<Task>>() {
-                        @Override
-                        public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
-                            if (response.body() == null)
-                                return;
-                            for (Task task : response.body())
-                                Log.d("Response Task", task.title);
-                        }
 
-                        @Override
-                        public void onFailure(Call<List<Task>> call, Throwable t) {
-                            Log.e("Error from server", t.getMessage());
-                            t.printStackTrace();
-                            Log.d("End of error", "<<<<<<<<<<");
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         });
+
+        loadMainFragment();
     }
+
+    private void loadMainFragment() {
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentHolder, new DayViewFragment());
+        fragmentTransaction.commit();
+    }
+
 
     /**
      * Launches login activity and finish current activity

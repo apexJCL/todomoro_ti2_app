@@ -81,7 +81,7 @@ public class LoginActivity extends Activity {
     }
 
     private void launchMain() {
-        Intent i = new Intent(this, MainActivity.class);
+        Intent i = new Intent(this, HomeActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
         finish();

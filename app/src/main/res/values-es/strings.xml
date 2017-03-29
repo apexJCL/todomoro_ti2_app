@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Todomoro</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="currentUserlabel">Cuenta</string>
+    <string name="emptyPassword">La contraseña no puede estar vacía</string>
+    <string name="emptyUsername">Nombre de usuario no puede estar vacío</string>
+    <string name="labelLogout">Cerrar Sesión</string>
+    <string name="labelPassword">Contraseña</string>
+    <string name="labelUsername">Nombre de usuario</string>
+    <string name="loginButton">Iniciar Sesión</string>
+    <string name="loginPlease">Inicia sesión</string>
+    <string name="navigation_drawer_close">Cerrar cajón de navegación</string>
+    <string name="navigation_drawer_open">Abrir cajón de navegación</string>
+    <string name="passwordTooShort">La contraseña es muy corta (mínimo 6 caracteres)</string>
+    <string name="title_activity_home">Actividad Principal</string>
+    <string name="labelDayview">Día</string>
+    <string name="labelWeeView">Semana</string>
+</resources>

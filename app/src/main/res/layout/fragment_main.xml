@@ -5,17 +5,24 @@
         android:id="@+id/content_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        tools:showIn="@layout/activity_main"
-        tools:context="me.apexjcl.todomoro.fragments.MainActivityFragment">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context="me.apexjcl.todomoro.fragments.DayViewFragment">
 
     <com.alamkanak.weekview.WeekView
             android:id="@+id/weekView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:noOfVisibleDays="1"
+            app:todayBackgroundColor="@color/todayBackground"
+            app:hourHeight="@dimen/weekviewHourHeight"
+            app:headerColumnBackground="@color/colorPrimaryDark"
+            app:headerColumnPadding="8dp"
+            app:headerColumnTextColor="@color/textDark"
+            app:headerRowBackgroundColor="@color/colorPrimary"
+            app:headerRowPadding="@dimen/weekviewHeaderPadding"
+            app:todayHeaderTextColor="@color/white"
+            app:showNowLine="true"
+            app:nowLineColor="@color/colorPrimaryDark"
             />
 
 </RelativeLayout>

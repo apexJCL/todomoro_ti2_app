@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Todomoro</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loginPlease">Inicia sesión</string>
+    <string name="labelUsername">Nombre de usuario</string>
+    <string name="labelPassword">Contraseña</string>
+    <string name="loginButton">Iniciar Sesión</string>
+    <string name="emptyUsername">Nombre de usuario no puede estar vacío</string>
+    <string name="emptyPassword">La contraseña no puede estar vacía</string>
+    <string name="passwordTooShort">La contraseña es muy corta (mínimo 6 caracteres)</string>
+    <string name="labelLogout">Cerrar Sesión</string>
+</resources>

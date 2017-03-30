@@ -26,17 +26,16 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.taskTitle)
-        private TextView title;
-        @BindView(R.id.taskDescription)
-        private TextView description;
-        @BindView(R.id.taskDueDate)
-        private TextView dueDate;
+        TextView title;
+        TextView description;
+        TextView dueDate;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            title = (TextView) itemView.findViewById(R.id.taskTitle);
+            description = (TextView) itemView.findViewById(R.id.taskDescription);
+            dueDate = (TextView) itemView.findViewById(R.id.taskDueDate);
         }
     }
 

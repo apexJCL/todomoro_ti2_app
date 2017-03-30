@@ -26,6 +26,7 @@ import io.realm.RealmConfiguration;
 import me.apexjcl.todomoro.entities.Task;
 import me.apexjcl.todomoro.entities.User;
 import me.apexjcl.todomoro.fragments.DayViewFragment;
+import me.apexjcl.todomoro.fragments.NewTaskFragment;
 import me.apexjcl.todomoro.fragments.TodoFragment;
 import net.danlew.android.joda.JodaTimeAndroid;
 import retrofit2.Call;
@@ -95,6 +96,22 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         loadMainFragment();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fab.setImageResource(R.drawable.ic_done);
+                Fragment f = getSupportFragmentManager().findFragmentById(R.id.content_fragment);
+                if (f instanceof NewTaskFragment) {
+                    if (((NewTaskFragment) f).saveTask())
+                        Toast.makeText(getApplicationContext(), "Correct", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_fragment, new NewTaskFragment());
+                ft.commit();
+            }
+        });
     }
 
     /**
@@ -129,9 +146,9 @@ public class HomeActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        toggleSpinner();
         switch (id) {
             case R.id.action_refresh:
+                toggleSpinner();
                 Call<List<Task>> refresh = Task.refresh(this);
                 if (refresh != null) {
                     refresh.enqueue(new Callback<List<Task>>() {
@@ -142,8 +159,8 @@ public class HomeActivity extends AppCompatActivity
                                 return;
                             }
                             Task.reloadFromServer(response.body());
-                            DayViewFragment dayViewFragment = (DayViewFragment) getSupportFragmentManager().findFragmentByTag(DayViewFragment.TAG);
-                            dayViewFragment.updateWeekview(Task.fetchAll());
+//                            DayViewFragment dayViewFragment = (DayViewFragment) getSupportFragmentManager().findFragmentByTag(DayViewFragment.TAG);
+//                            dayViewFragment.updateWeekview(Task.fetchAll());
                             toggleSpinner();
                         }
 
@@ -158,6 +175,10 @@ public class HomeActivity extends AppCompatActivity
                     Toast.makeText(this, R.string.errorFetch, Toast.LENGTH_LONG).show();
                     toggleSpinner();
                 }
+                break;
+            case R.id.action_settings:
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
                 break;
             default:
                 break;
@@ -182,6 +203,8 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        fab.setImageResource(R.drawable.ic_add);
 
         // Check current fragment
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.content_fragment);

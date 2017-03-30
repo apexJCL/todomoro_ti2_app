@@ -3,28 +3,18 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context="me.apexjcl.todomoro.fragments.TodoFragment">
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
+            tools:context="me.apexjcl.tomodoro.fragments.TodoFragment"
+            android:name="me.apexjcl.tomodoro.fragments.TodoFragment"
+            tools:listitem="@layout/task_view"
+            app:layoutManager="GridLayoutManager"
+            android:id="@+id/recyclerTaskView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <ProgressBar
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone"
-                android:id="@+id/progressBar"/>
-
-        <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
-
-    </RelativeLayout>
-
+    </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>

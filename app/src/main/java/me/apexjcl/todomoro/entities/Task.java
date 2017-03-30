@@ -4,11 +4,12 @@ import android.content.Context;
 import com.google.gson.annotations.SerializedName;
 import io.realm.Realm;
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Ignore;
 import me.apexjcl.todomoro.retrofit.RetrofitInstance;
 import me.apexjcl.todomoro.retrofit.services.TaskService;
 import retrofit2.Call;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -21,16 +22,22 @@ import java.util.List;
  */
 public class Task extends RealmObject {
 
-    @PrimaryKey
-    public int id;
     public String title;
     public String description;
     @SerializedName("due_date")
     public Date dueDate;
     @SerializedName("pomodoro_cycles")
     public Integer pomodoroCycles;
+    public boolean done;
     @SerializedName("created_at")
     public Date createdAt;
+
+    @Ignore
+    public Integer year;
+    @Ignore
+    public Integer month;
+    @Ignore
+    public Integer dayOfMonth;
 
 
     private static void save(final List<Task> tasks) {
@@ -41,12 +48,12 @@ public class Task extends RealmObject {
                 realm.delete(Task.class);
                 for (Task task : tasks) {
                     Task t = realm.createObject(Task.class);
-                    t.id = task.id;
                     t.title = task.title;
                     t.description = task.description;
                     t.createdAt = task.createdAt;
                     t.dueDate = task.dueDate;
                     t.pomodoroCycles = task.pomodoroCycles;
+                    t.done = task.done;
                     realm.copyToRealm(t);
                 }
             }
@@ -92,5 +99,35 @@ public class Task extends RealmObject {
     public static List<Task> fetchAll() {
         Realm r = Realm.getDefaultInstance();
         return r.where(Task.class).findAll();
+    }
+
+    public void setDueDate(int year, int month, int dayOfMonth) {
+        this.year = year;
+        this.month = month;
+        this.dayOfMonth = dayOfMonth;
+    }
+
+    public void create() {
+
+    }
+
+    public void save() {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, dayOfMonth);
+        this.dueDate = new Date(c.getTimeInMillis());
+        Realm r = Realm.getDefaultInstance();
+        r.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Task t = realm.createObject(Task.class);
+                t.dueDate = dueDate;
+                t.title = title;
+                t.description = description;
+                t.done = false;
+                t.createdAt = new Date();
+                t.pomodoroCycles = 0;
+                realm.copyToRealm(t);
+            }
+        });
     }
 }

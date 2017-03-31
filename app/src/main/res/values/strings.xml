@@ -102,4 +102,6 @@
     <string name="labelDescription">Description</string>
     <string name="setDueDate">Due date</string>
     <string name="emptyTitle">Title cannot be empty</string>
+    <string name="setDueTime">Due Time</string>
+    <string name="errorSaving">An error has ocurred saving your task. Try again later.</string>
 </resources>

@@ -4,53 +4,77 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <TextView
-            android:id="@+id/newTaskTitleLabel"
-            android:text="@string/labelNewTask"
-            android:paddingLeft="@dimen/task_left_right_padding"
-            android:paddingRight="@dimen/task_left_right_padding"
+    <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progressSpinner"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:fontFamily="sans-serif"
-            android:paddingTop="@dimen/task_top_bottom_padding"
-            android:paddingBottom="@dimen/task_top_bottom_padding"
-            android:textSize="@dimen/new_task_title_font_size"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
-    <EditText
-            android:id="@+id/taskTitle"
-            android:layout_below="@id/newTaskTitleLabel"
-            android:maxLines="1"
-            android:paddingLeft="@dimen/task_left_right_padding"
-            android:paddingRight="@dimen/task_left_right_padding"
-            android:paddingTop="@dimen/task_top_bottom_padding"
-            android:paddingBottom="@dimen/task_top_bottom_padding"
-            android:hint="@string/labelTitle"
+    <RelativeLayout
+            android:id="@+id/formLayout"
             android:layout_width="match_parent"
-            android:inputType="text"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent">
 
-    <EditText
-            android:layout_below="@id/taskTitle"
-            android:paddingLeft="@dimen/task_left_right_padding"
-            android:paddingRight="@dimen/task_left_right_padding"
-            android:paddingTop="@dimen/task_top_bottom_padding"
-            android:paddingBottom="@dimen/task_top_bottom_padding"
-            android:hint="@string/labelDescription"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/task_description_heigh"
-            android:id="@+id/taskDescription"/>
+        <TextView
+                android:id="@+id/newTaskTitleLabel"
+                android:text="@string/labelNewTask"
+                android:paddingLeft="@dimen/task_left_right_padding"
+                android:paddingRight="@dimen/task_left_right_padding"
+                android:layout_width="wrap_content"
+                android:fontFamily="sans-serif"
+                android:paddingTop="@dimen/task_top_bottom_padding"
+                android:paddingBottom="@dimen/task_top_bottom_padding"
+                android:textSize="@dimen/new_task_title_font_size"
+                android:layout_height="wrap_content"/>
 
-    <Button
-            android:background="#00000000"
-            android:text="@string/setDueDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/taskDescription"
-            android:layout_marginStart="@dimen/task_left_right_padding"
-            android:layout_marginTop="@dimen/task_top_bottom_padding"
-            android:layout_marginBottom="@dimen/task_top_bottom_padding"
-            android:id="@+id/calendarToggle"/>
+        <EditText
+                android:id="@+id/taskTitle"
+                android:layout_below="@id/newTaskTitleLabel"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/task_left_right_padding"
+                android:paddingRight="@dimen/task_left_right_padding"
+                android:paddingTop="@dimen/task_top_bottom_padding"
+                android:paddingBottom="@dimen/task_top_bottom_padding"
+                android:hint="@string/labelTitle"
+                android:layout_width="match_parent"
+                android:inputType="text"
+                android:layout_height="wrap_content"/>
 
+        <EditText
+                android:layout_below="@id/taskTitle"
+                android:paddingLeft="@dimen/task_left_right_padding"
+                android:paddingRight="@dimen/task_left_right_padding"
+                android:paddingTop="@dimen/task_top_bottom_padding"
+                android:paddingBottom="@dimen/task_top_bottom_padding"
+                android:hint="@string/labelDescription"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/task_description_heigh"
+                android:id="@+id/taskDescription"/>
 
+        <Button
+                android:background="#00000000"
+                android:text="@string/setDueDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/taskDescription"
+                android:layout_marginStart="@dimen/task_left_right_padding"
+                android:layout_marginTop="@dimen/task_top_bottom_padding"
+                android:layout_marginBottom="@dimen/task_top_bottom_padding"
+                android:id="@+id/calendarToggle"/>
+
+        <Button
+                android:background="#00000000"
+                android:text="@string/setDueTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/calendarToggle"
+                android:layout_below="@id/taskDescription"
+                android:layout_marginStart="@dimen/task_left_right_padding"
+                android:layout_marginTop="@dimen/task_top_bottom_padding"
+                android:layout_marginBottom="@dimen/task_top_bottom_padding"
+                android:id="@+id/timeToggle"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

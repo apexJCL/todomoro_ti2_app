@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
+import me.apexjcl.todomoro.fragments.NewTaskFragment;
 import me.apexjcl.todomoro.retrofit.RetrofitInstance;
 import me.apexjcl.todomoro.retrofit.services.TaskService;
 import retrofit2.Call;
@@ -27,7 +28,7 @@ public class Task extends RealmObject {
     @SerializedName("due_date")
     public Date dueDate;
     @SerializedName("pomodoro_cycles")
-    public Integer pomodoroCycles;
+    public Integer pomodoroCycles = 0;
     public boolean done;
     @SerializedName("created_at")
     public Date createdAt;
@@ -38,6 +39,10 @@ public class Task extends RealmObject {
     public Integer month;
     @Ignore
     public Integer dayOfMonth;
+    @Ignore
+    public Integer hour;
+    @Ignore
+    public Integer minutes;
 
 
     private static void save(final List<Task> tasks) {
@@ -129,5 +134,25 @@ public class Task extends RealmObject {
                 realm.copyToRealm(t);
             }
         });
+    }
+
+    public static void save(final Task task, NewTaskFragment fragment) {
+        Realm r = Realm.getDefaultInstance();
+        r.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Task t = realm.createObject(Task.class);
+                t.title = task.title;
+                t.description = task.description;
+                t.pomodoroCycles = task.pomodoroCycles;
+                t.done = task.done;
+                Calendar c = Calendar.getInstance();
+                c.set(task.year, task.month, task.year);
+                c.set(Calendar.HOUR_OF_DAY, task.hour);
+                c.set(Calendar.MINUTE, task.minutes);
+                t.dueDate = c.getTime();
+                realm.copyToRealm(t);
+            }
+        }, fragment, fragment);
     }
 }

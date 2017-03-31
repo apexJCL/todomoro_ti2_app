@@ -36,7 +36,7 @@ import retrofit2.Response;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FloatingActionButton.OnClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -97,21 +97,7 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         loadMainFragment();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fab.setImageResource(R.drawable.ic_done);
-                Fragment f = getSupportFragmentManager().findFragmentById(R.id.content_fragment);
-                if (f instanceof NewTaskFragment) {
-                    if (((NewTaskFragment) f).saveTask())
-                        Toast.makeText(getApplicationContext(), "Correct", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_fragment, new NewTaskFragment());
-                ft.commit();
-            }
-        });
+        fab.setOnClickListener(this);
     }
 
     /**
@@ -250,5 +236,14 @@ public class HomeActivity extends AppCompatActivity
         ft.replace(R.id.content_fragment, new DayViewFragment(), DayViewFragment.TAG);
         ft.commit();
         getSupportFragmentManager().executePendingTransactions();
+        fab.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        fab.setImageResource(R.drawable.ic_done);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_fragment, new NewTaskFragment());
+        ft.commit();
     }
 }

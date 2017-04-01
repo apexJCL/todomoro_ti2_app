@@ -147,12 +147,11 @@ public class Task extends RealmObject {
                 t.pomodoroCycles = task.pomodoroCycles;
                 t.done = task.done;
                 Calendar c = Calendar.getInstance();
-                c.set(task.year, task.month, task.year);
-                c.set(Calendar.HOUR_OF_DAY, task.hour);
-                c.set(Calendar.MINUTE, task.minutes);
-                t.dueDate = c.getTime();
+                c.set(task.year, task.month, task.dayOfMonth, task.hour, task.minutes);
+                t.dueDate = new Date(c.getTimeInMillis());
                 realm.copyToRealm(t);
             }
         }, fragment, fragment);
+        // TODO: fix null date values on no dialogfragment called
     }
 }

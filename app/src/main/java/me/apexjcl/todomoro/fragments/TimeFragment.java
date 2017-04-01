@@ -19,12 +19,16 @@ public class TimeFragment extends DialogFragment implements TimePickerDialog.OnT
     Integer hour;
     Integer minutes;
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public TimeFragment() {
+        super();
         Calendar c = Calendar.getInstance();
         hour = hour == null ? c.get(Calendar.HOUR_OF_DAY) : hour;
         minutes = minutes == null ? c.get(Calendar.MINUTE) : minutes;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new TimePickerDialog(getActivity(), this, hour, minutes, false);
     }
 

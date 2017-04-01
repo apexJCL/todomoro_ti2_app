@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,7 +37,8 @@ import retrofit2.Response;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FloatingActionButton.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FloatingActionButton.OnClickListener,
+        FragmentManager.OnBackStackChangedListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -225,7 +227,7 @@ public class HomeActivity extends AppCompatActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_fragment, new TodoFragment());
         ft.commit();
-        getSupportFragmentManager().executePendingTransactions();
+        ft.addToBackStack(null);
     }
 
     private void loadMainFragment() {
@@ -244,6 +246,18 @@ public class HomeActivity extends AppCompatActivity
         fab.setImageResource(R.drawable.ic_done);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_fragment, new NewTaskFragment());
+        ft.addToBackStack(null);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
         ft.commit();
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.content_fragment);
+        fab.setOnClickListener((View.OnClickListener) f);
+        if (f instanceof NewTaskFragment)
+            fab.setImageResource(R.drawable.ic_done);
+        else if (f instanceof DayViewFragment || f instanceof TodoFragment)
+            fab.setImageResource(R.drawable.ic_add);
     }
 }

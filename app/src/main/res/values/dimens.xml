@@ -16,4 +16,6 @@
     <dimen name="task_left_right_padding">20dp</dimen>
     <dimen name="task_top_bottom_padding">15dp</dimen>
     <dimen name="task_description_heigh">120dp</dimen>
+    <!--Buttons-->
+    <dimen name="button_padding">10dp</dimen>
 </resources>

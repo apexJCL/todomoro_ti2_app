@@ -62,6 +62,7 @@ public class NewTaskFragment extends Fragment
         super.onCreate(savedInstanceState);
         task = new Task();
         dateFragment = new DateFragment();
+        timeFragment = new TimeFragment();
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(this);
     }
@@ -130,11 +131,14 @@ public class NewTaskFragment extends Fragment
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
+        task.year = year;
+        task.month = month;
+        task.dayOfMonth = dayOfMonth;
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
+        task.hour = hourOfDay;
+        task.minutes = minute;
     }
 }

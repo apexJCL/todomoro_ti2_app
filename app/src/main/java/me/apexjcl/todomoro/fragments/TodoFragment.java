@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +22,7 @@ import me.apexjcl.todomoro.entities.Task;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TodoFragment extends Fragment implements FloatingActionButton.OnClickListener {
+public class TodoFragment extends Fragment implements FloatingActionButton.OnClickListener, FragmentManager.OnBackStackChangedListener {
 
     @BindView(R.id.recyclerTaskView)
     RecyclerView recyclerView;
@@ -37,6 +38,7 @@ public class TodoFragment extends Fragment implements FloatingActionButton.OnCli
         super.onCreate(savedInstanceState);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(this);
+        getFragmentManager().addOnBackStackChangedListener(this);
     }
 
     @Override
@@ -46,7 +48,17 @@ public class TodoFragment extends Fragment implements FloatingActionButton.OnCli
         ButterKnife.bind(this, v);
         // Inflate the layout for this fragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new TaskListAdapter(Task.fetchAll()));
+        TaskListAdapter adapter = new TaskListAdapter(Task.fetchAll());
+        adapter.setFragmentManager(getFragmentManager());
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0)
+                    fab.hide();
+                else fab.show();
+            }
+        });
         return v;
     }
 
@@ -61,6 +73,17 @@ public class TodoFragment extends Fragment implements FloatingActionButton.OnCli
         fab.setImageResource(R.drawable.ic_done);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_fragment, new NewTaskFragment());
+        ft.addToBackStack(null);
         ft.commit();
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.content_fragment);
+        fab.setOnClickListener((View.OnClickListener) f);
+        if (f instanceof NewTaskFragment)
+            fab.setImageResource(R.drawable.ic_done);
+        else if (f instanceof DayViewFragment || f instanceof TodoFragment)
+            fab.setImageResource(R.drawable.ic_add);
     }
 }

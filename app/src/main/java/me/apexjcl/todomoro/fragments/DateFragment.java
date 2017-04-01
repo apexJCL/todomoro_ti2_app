@@ -21,13 +21,17 @@ public class DateFragment extends DialogFragment implements DatePickerDialog.OnD
     Integer month;
     Integer day;
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public DateFragment() {
+        super();
         final Calendar c = Calendar.getInstance();
         year = year == null ? c.get(Calendar.YEAR) : year;
         month = month == null ? c.get(Calendar.MONTH) : month;
         day = day == null ? c.get(Calendar.DAY_OF_MONTH) : day;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Create a new instance of DatePickerDialog and return it
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
